@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -32,14 +32,31 @@ const Hamburger = styled.i`
 `;
 
 const ScoutRow = styled(TableRow)`
-  background-color: #fff;
-  display: table;
+  background-color: ${props => (props.isdragging === 'true' ? '#fff' : 'auto')};
+  ${props =>
+    props.isdragging === 'true'
+      ? 'display: table !important; table-layout: fixed'
+      : ''}
 `;
 
 export default function AdminUserTable() {
   const classes = useStyles();
-  const onDragEnd = (...args) => {
-    console.log({ args });
+  const [data, setData] = useState(rows);
+
+  const onDragEnd = result => {
+    const { source, destination } = result;
+
+    if (!destination || source.index === destination.index) return;
+
+    const sourceVal = data[source.index];
+    const destinationVal = data[destination.index];
+
+    const newState = [...data];
+
+    newState.splice(source.index, 1, destinationVal);
+    newState.splice(destination.index, 1, sourceVal);
+
+    setData(newState);
   };
 
   return (
@@ -60,12 +77,13 @@ export default function AdminUserTable() {
                 {...droppableProvided.droppableProps}
                 ref={droppableProvided.innerRef}
               >
-                {rows.map((row, index) => (
+                {data.map((row, index) => (
                   <Draggable draggableId={row.id} index={index} key={row.id}>
-                    {draggableProvided => (
+                    {(draggableProvided, snapshot) => (
                       <ScoutRow
                         {...draggableProvided.draggableProps}
                         ref={draggableProvided.innerRef}
+                        isdragging={`${snapshot.isDragging}`}
                       >
                         <TableCell
                           width="25"
