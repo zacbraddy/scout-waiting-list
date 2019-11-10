@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import React from 'react';
+import { useTheme } from '@material-ui/core/styles';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import moment from 'moment';
 import MomentUtils from '@date-io/moment';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -17,18 +17,12 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Zoom from '@material-ui/core/Zoom';
-import styled from 'styled-components';
 import { Draggable, DragDropContext, Droppable } from 'react-beautiful-dnd';
-
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    overflowX: 'auto',
-  },
-  table: {
-    minWidth: 650,
-  },
-});
+import ScoutRow from './scout-row';
+import BottomRightFab from './bottom-right-fab';
+import Hamburger from './hamburger';
+import useAdminTableStyles from './use-admin-table-styles';
+import useAdminTableReducer from './use-admin-table-reducer';
 
 const rows = [
   { id: '5eafc', points: 50, startDate: '23/02/2019' },
@@ -38,47 +32,17 @@ const rows = [
   { id: '43543safd', points: 356, startDate: '16/04/2019' },
 ];
 
-const Hamburger = styled.i`
-  color: ${props => props.color};
-`;
-
-const BottomRightFab = styled(Fab)`
-  margin: 0px;
-  top: auto;
-  right: 20px;
-  bottom: 20px;
-  left: auto;
-  position: fixed !important;
-`;
-
-const ScoutRow = styled(TableRow)`
-  background-color: ${props => (props.isdragging === 'true' ? '#fff' : 'auto')};
-  ${props =>
-    props.isdragging === 'true'
-      ? 'display: table !important; table-layout: fixed'
-      : ''}
-`;
-
 export default function AdminUserTable() {
-  const classes = useStyles();
+  const classes = useAdminTableStyles();
   const theme = useTheme();
-  const [data, setData] = useState(rows);
-  const [isEditing, setIsEditing] = useState(false);
+  const [state, actions] = useAdminTableReducer({
+    rows,
+    isEditing: false,
+    editingRow: { id: '', points: 0, startDate: moment().format('DD/MM/YYYY') },
+  });
 
-  const onDragEnd = result => {
-    const { source, destination } = result;
-
-    if (!destination || source.index === destination.index) return;
-
-    const sourceVal = data[source.index];
-    const destinationVal = data[destination.index];
-
-    const newState = [...data];
-
-    newState.splice(source.index, 1, destinationVal);
-    newState.splice(destination.index, 1, sourceVal);
-
-    setData(newState);
+  const onDragEnd = ({ source, destination }) => {
+    actions.switchRows({ source, destination });
   };
 
   return (
@@ -100,7 +64,7 @@ export default function AdminUserTable() {
                   {...droppableProvided.droppableProps}
                   ref={droppableProvided.innerRef}
                 >
-                  {data.map((row, index) => (
+                  {state.rows.map((row, index) => (
                     <Draggable draggableId={row.id} index={index} key={row.id}>
                       {(draggableProvided, snapshot) => (
                         <ScoutRow
@@ -126,7 +90,7 @@ export default function AdminUserTable() {
                       )}
                     </Draggable>
                   ))}
-                  {isEditing && (
+                  {state.isEditing && (
                     <>
                       <TableRow>
                         <TableCell width="25"></TableCell>
@@ -135,6 +99,10 @@ export default function AdminUserTable() {
                             id="newId"
                             label="Id"
                             className={classes.textField}
+                            value={state.editingRow.id}
+                            onChange={ev =>
+                              actions.setEditingRowId(ev.target.value)
+                            }
                           />
                         </TableCell>
                         <TableCell>
@@ -142,16 +110,32 @@ export default function AdminUserTable() {
                             id="newPoints"
                             label="points"
                             className={classes.textField}
+                            type="number"
+                            value={state.editingRow.points}
+                            onChange={ev =>
+                              actions.setEditingRowPoints(ev.target.value)
+                            }
                           />
                         </TableCell>
                         <TableCell align="right">
-                          <MuiPickersUtilsProvider utils={MomentUtils}>
+                          <MuiPickersUtilsProvider
+                            libInstance={moment}
+                            locale={'en-GB'}
+                            utils={MomentUtils}
+                          >
                             <KeyboardDatePicker
                               variant="inline"
                               id="newPoints"
                               label="Start Date"
                               format="DD/MM/YYYY"
                               className={classes.textField}
+                              inputValue={state.editingRow.startDate}
+                              onChange={date =>
+                                actions.setEditingRowStartDate(
+                                  date.format('DD/MM/YYYY')
+                                )
+                              }
+                              autoOk
                             />
                           </MuiPickersUtilsProvider>
                         </TableCell>
@@ -166,7 +150,7 @@ export default function AdminUserTable() {
                             variant="contained"
                             aria-label="save"
                             style={{ margin: theme.spacing(0, 1) }}
-                            onClick={() => setIsEditing(false)}
+                            onClick={() => actions.addNewRow(state.editingRow)}
                           >
                             <SaveIcon />
                             Save
@@ -175,7 +159,7 @@ export default function AdminUserTable() {
                             color="primary"
                             size="small"
                             className={classes.margin}
-                            onClick={() => setIsEditing(false)}
+                            onClick={() => actions.setIsEditing(false)}
                           >
                             Cancel
                           </Button>
@@ -190,13 +174,13 @@ export default function AdminUserTable() {
           </Table>
         </DragDropContext>
       </Paper>
-      {!isEditing && (
-        <Zoom key="secondary" in={!isEditing} unmountOnExit>
+      {!state.isEditing && (
+        <Zoom key="secondary" in={!state.isEditing} unmountOnExit>
           <BottomRightFab
             color="secondary"
             aria-label="add"
             className={classes.fab}
-            onClick={() => setIsEditing(true)}
+            onClick={() => actions.setIsEditing(true)}
           >
             <AddIcon />
           </BottomRightFab>
