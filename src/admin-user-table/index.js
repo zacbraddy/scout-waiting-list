@@ -23,6 +23,7 @@ import BottomRightFab from './bottom-right-fab';
 import Hamburger from './hamburger';
 import useAdminTableStyles from './use-admin-table-styles';
 import useAdminTableReducer from './use-admin-table-reducer';
+import config from '../config';
 
 const rows = [
   { id: '5eafc', points: 50, startDate: '23/02/2019' },
@@ -186,6 +187,7 @@ export default function AdminUserTable() {
           </BottomRightFab>
         </Zoom>
       )}
+      <div>{config.TEST}</div>
     </>
   );
 }
