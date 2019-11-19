@@ -47,7 +47,7 @@ jobs:
           command: cp .firebaserc.base .firebaserc
       - run:
           name: modify-firebaserc
-          command: sed -i "s/\[FIREBASE\-PROJECT\-ID\]/$FIREBASE_PROJECT_ID-DEV/g" .firebaserc
+          command: sed -i "s/\[FIREBASE\-PROJECT\-ID\]/$FIREBASE_PROJECT_ID_DEV/g" .firebaserc
       - run:
           name: deploy-firebase
           command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
@@ -78,7 +78,7 @@ jobs:
           command: cp .firebaserc.base .firebaserc
       - run:
           name: modify-firebaserc
-          command: sed -i "s/\[FIREBASE\-PROJECT\-ID\]/$FIREBASE_PROJECT_ID-PROD/g" .firebaserc
+          command: sed -i "s/\[FIREBASE\-PROJECT\-ID\]/$FIREBASE_PROJECT_ID_PROD/g" .firebaserc
       - run:
           name: deploy-firebase
           command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
