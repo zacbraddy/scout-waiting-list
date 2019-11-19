@@ -1,18 +1,18 @@
 version: 2.0 
 jobs:
-  build:
+  test:
     working_directory: ~/repo
     docker:
-      - image: circleci/node:10.17
+      - image: circleci/node:10.17.0
     steps:
       - checkout
       - run:
-          name: update-npm
+          name: install-npm
           command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: install-npm
+          name: install-dependencies
           command: npm install
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
@@ -21,3 +21,49 @@ jobs:
       - run:
           name: test
           command: npm run test:ci
+  deploy:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:10.17.0
+    steps:
+      - checkout
+      - run:
+          name: install-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: build-site
+          command: npm run build
+      - run:
+          name: generate-firebaserc
+          command: cp .firebaserc.example .firebaserc
+      - run:
+          name: modify-firebaserc
+          command: sed -i "s/\[FIREBASE\-PROJECT\-ID\]/$FIREBASE_PROJECT_ID/g" .firebaserc
+      - run:
+          name: deploy-firebase
+          command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
+
+workflows:
+  version: 2
+  feature-test:
+    jobs:
+      - test:
+          filters:
+            branches:
+              only: feature/*
+
+  build-and-deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: master
