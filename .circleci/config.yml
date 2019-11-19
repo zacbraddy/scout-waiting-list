@@ -1,0 +1,109 @@
+version: 2.0 
+jobs:
+  test:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:10.17.0
+    steps:
+      - checkout
+      - run:
+          name: install-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: test
+          command: npm run test:ci
+  deploy-to-dev:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:10.17.0
+    steps:
+      - checkout
+      - run:
+          name: install-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: build-site
+          command: npm run build
+      - run:
+          name: generate-firebaserc
+          command: cp .firebaserc.base .firebaserc
+      - run:
+          name: modify-firebaserc
+          command: sed -i "s/\[FIREBASE\-PROJECT\-ID\]/$FIREBASE_PROJECT_ID_DEV/g" .firebaserc
+      - run:
+          name: deploy-firebase
+          command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
+
+  deploy-to-prod:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:10.17.0
+    steps:
+      - checkout
+      - run:
+          name: install-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: build-site
+          command: npm run build
+      - run:
+          name: generate-firebaserc
+          command: cp .firebaserc.base .firebaserc
+      - run:
+          name: modify-firebaserc
+          command: sed -i "s/\[FIREBASE\-PROJECT\-ID\]/$FIREBASE_PROJECT_ID_PROD/g" .firebaserc
+      - run:
+          name: deploy-firebase
+          command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
+
+workflows:
+  version: 2
+  feature-test:
+    jobs:
+      - test:
+          filters:
+            branches:
+              only: /feature\/.*/
+
+  build-and-deploy-to-dev:
+    jobs:
+      - deploy-to-dev:
+          filters:
+            branches:
+              only: 
+                - develop
+
+  build-and-deploy-to-prod:
+    jobs:
+      - deploy-to-prod:
+          filters:
+            branches:
+              only: 
+                - master
