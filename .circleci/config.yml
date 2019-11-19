@@ -44,7 +44,7 @@ jobs:
           command: npm run build
       - run:
           name: generate-firebaserc
-          command: cp .firebaserc.example .firebaserc
+          command: cp .firebaserc.base .firebaserc
       - run:
           name: modify-firebaserc
           command: sed -i "s/\[FIREBASE\-PROJECT\-ID\]/$FIREBASE_PROJECT_ID/g" .firebaserc
