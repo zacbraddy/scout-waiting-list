@@ -1,6 +1,6 @@
 {
   "name": "scout-waiting-list",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@date-io/moment": "^1.3.11",
@@ -11,6 +11,7 @@
     "react": "^16.11.0",
     "react-beautiful-dnd": "^12.0.0",
     "react-dom": "^16.11.0",
+    "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "styled-components": "^4.4.1"

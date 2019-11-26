@@ -18,12 +18,11 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Zoom from '@material-ui/core/Zoom';
 import { Draggable, DragDropContext, Droppable } from 'react-beautiful-dnd';
-import ScoutRow from './scout-row';
+import ScoutRow from '../common/scout-row';
 import BottomRightFab from './bottom-right-fab';
 import Hamburger from './hamburger';
-import useAdminTableStyles from './use-admin-table-styles';
-import useAdminTableReducer from './use-admin-table-reducer';
-import config from '../config';
+import useAdminWaitingListStyles from '../common/use-waiting-list-styles';
+import useAdminWaitingListReducer from './use-admin-waiting-list-reducer';
 
 const rows = [
   { id: '5eafc', points: 50, startDate: '23/02/2019' },
@@ -33,10 +32,10 @@ const rows = [
   { id: '43543safd', points: 356, startDate: '16/04/2019' },
 ];
 
-export default function AdminUserTable() {
-  const classes = useAdminTableStyles();
+export default function AdminWaitingList() {
+  const classes = useAdminWaitingListStyles();
   const theme = useTheme();
-  const [state, actions] = useAdminTableReducer({
+  const [state, actions] = useAdminWaitingListReducer({
     rows,
     isEditing: false,
     editingRow: { id: '', points: 0, startDate: moment().format('DD/MM/YYYY') },
@@ -187,7 +186,6 @@ export default function AdminUserTable() {
           </BottomRightFab>
         </Zoom>
       )}
-      <div>{config.TEST}</div>
     </>
   );
 }

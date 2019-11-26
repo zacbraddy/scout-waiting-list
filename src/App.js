@@ -1,23 +1,29 @@
 import React from 'react';
+
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { ThemeProvider } from '@material-ui/styles';
 
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 import AppNavBar from './app-nav-bar';
-import AdminUserTable from './admin-user-table';
+import AdminWaitingList from './admin-waiting-list';
+import WaitingList from './waiting-list';
 import theme from './theme';
-import './App.css';
 
 function App() {
   return (
     <>
-      <CssBaseline />
-      <ThemeProvider theme={theme}>
-        <AppNavBar />
-        <Container maxWidth="lg">
-          <AdminUserTable />
-        </Container>
-      </ThemeProvider>
+      <Router>
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+          <AppNavBar />
+          <Container maxWidth="lg">
+            <Route exact path="/" component={WaitingList} />
+            <Route exact path="/admin" component={AdminWaitingList} />
+          </Container>
+        </ThemeProvider>
+      </Router>
     </>
   );
 }
