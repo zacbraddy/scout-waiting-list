@@ -131,7 +131,7 @@ function reducer(state = {}, action) {
   }
 }
 
-export default function useAdminTableReducer(initialState = {}) {
+export default function useAdminWaitingListReducer(initialState = {}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return [
