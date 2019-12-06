@@ -20,9 +20,9 @@ import theme from './theme';
 function App() {
   return (
     <>
-      <Provider store={store}>
-        <ReactReduxFirebaseProvider {...firebaseConfig}>
-          <Router>
+      <Router>
+        <Provider store={store}>
+          <ReactReduxFirebaseProvider {...firebaseConfig}>
             <CssBaseline />
             <ThemeProvider theme={theme}>
               <AppNavBar />
@@ -35,9 +35,9 @@ function App() {
                 />
               </Container>
             </ThemeProvider>
-          </Router>
-        </ReactReduxFirebaseProvider>
-      </Provider>
+          </ReactReduxFirebaseProvider>
+        </Provider>
+      </Router>
     </>
   );
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import Paper from '@material-ui/core/Paper';
 
 import useAdminWaitingListStyles from '../common/use-waiting-list-styles';
 import AdminWaitingList from './admin-waiting-list';
@@ -14,8 +13,16 @@ function AuthenticatedAdminWaitingList() {
   const firebase = useFirebase();
   const auth = useSelector(state => state.firebase.auth);
 
-  return (
-    <Paper className={classes.root}>
+  const getComponent = () => {
+    if (!isLoaded(auth) && !isEmpty(auth)) {
+      return <span>Loading...</span>;
+    }
+
+    if (isLoaded(auth) && !isEmpty(auth)) {
+      return <AdminWaitingList />;
+    }
+
+    return (
       <StyledFirebaseAuth
         uiConfig={{
           signInFlow: 'popup',
@@ -32,15 +39,10 @@ function AuthenticatedAdminWaitingList() {
         }}
         firebaseAuth={firebase.auth()}
       />
-      <div>
-        {!isLoaded(auth) && !isEmpty(auth) ? (
-          <AdminWaitingList />
-        ) : (
-          <span>Loading...</span>
-        )}
-      </div>
-    </Paper>
-  );
+    );
+  };
+
+  return getComponent();
 }
 
 export default AuthenticatedAdminWaitingList;

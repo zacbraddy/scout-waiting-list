@@ -4,8 +4,7 @@ export default makeStyles({
   root: {
     width: '100%',
     overflowX: 'auto',
+    marginBottom: '70px',
   },
-  table: {
-    minWidth: 650,
-  },
+  table: {},
 });
