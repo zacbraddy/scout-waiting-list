@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
-import useAdminWaitingListStyles from '../common/use-waiting-list-styles';
 import AdminWaitingList from './admin-waiting-list';
 // import { useHistory } from 'react-router-dom'; // if you use react-router
 // import GoogleButton from 'react-google-button' // optional
