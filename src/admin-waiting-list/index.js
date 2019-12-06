@@ -9,7 +9,6 @@ import AdminWaitingList from './admin-waiting-list';
 // import GoogleButton from 'react-google-button' // optional
 
 function AuthenticatedAdminWaitingList() {
-  const classes = useAdminWaitingListStyles();
   const firebase = useFirebase();
   const auth = useSelector(state => state.firebase.auth);
 
