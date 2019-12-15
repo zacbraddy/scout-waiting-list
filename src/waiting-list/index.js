@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,17 +9,18 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import ScoutRow from '../common/scout-row';
 import useWaitingListStyles from '../common/use-waiting-list-styles';
-
-const state = [
-  { id: '5eafc', points: 50, startDate: '23/02/2019' },
-  { id: '6hsdaf', points: 237, startDate: '13/02/2020' },
-  { id: '834', points: 262, startDate: '20/05/2019' },
-  { id: 'safd32', points: 305, startDate: '02/10/2021' },
-  { id: '43543safd', points: 356, startDate: '16/04/2019' },
-];
+import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase';
 
 export default function WaitingList() {
   const classes = useWaitingListStyles();
+  useFirestoreConnect([{ collection: 'scouts' }]);
+
+  const scouts = useSelector(state => state.firestore.ordered.scouts);
+
+  console.log({ isLoaded: isLoaded(scouts), isEmpty: isEmpty(scouts) });
+  if (!isLoaded(scouts) || isEmpty(scouts)) {
+    return <span>Loading...</span>;
+  }
 
   return (
     <>
@@ -31,13 +34,17 @@ export default function WaitingList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {state.map((row, index) => (
+            {scouts.map((row, index) => (
               <ScoutRow>
                 <TableCell component="th" scope="row">
                   {row.id}
                 </TableCell>
                 <TableCell>{row.points}</TableCell>
-                <TableCell align="right">{row.startDate}</TableCell>
+                <TableCell align="right">
+                  {moment
+                    .unix(row['date-joined-waiting-list'].seconds)
+                    .format('DD/MM/YYYY')}
+                </TableCell>
               </ScoutRow>
             ))}
           </TableBody>
