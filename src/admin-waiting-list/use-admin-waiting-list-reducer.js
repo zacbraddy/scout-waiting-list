@@ -2,9 +2,12 @@ import { useReducer } from 'react';
 
 const SWITCH_ROWS = 'SWITCH_ROWS';
 const SET_IS_EDITING = 'SET_IS_EDITING';
-const SET_EDITING_ROW_ACTION_ID = 'SET_EDITING_ROW_ACTION_ID';
+const SET_EDITING_ROW_ACTION_NAME = 'SET_EDITING_ROW_ACTION_NAME';
+const SET_EDITING_ROW_ACTION_TARGET_SECTION =
+  'SET_EDITING_ROW_ACTION_TARGET_SECTION';
 const SET_EDITING_ROW_ACTION_POINTS = 'SET_EDITING_ROW_ACTION_POINTS';
-const SET_EDITING_ROW_ACTION_START_DATE = 'SET_EDITING_ROW_ACTION_START_DATE';
+const SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST =
+  'SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST';
 const ADD_NEW_ROW = 'ADD_NEW_ROW';
 
 const switchRowsActionCreator = dispatch => ({ source, destination }) => {
@@ -47,19 +50,36 @@ const setIsEditingAction = (state, { newValue }) => {
   };
 };
 
-const setEditingRowIdActionCreator = dispatch => newValue => {
+const setEditingRowNameActionCreator = dispatch => newValue => {
   dispatch({
-    type: SET_EDITING_ROW_ACTION_ID,
+    type: SET_EDITING_ROW_ACTION_NAME,
     newValue,
   });
 };
 
-const setEditingRowIdAction = (state, { newValue }) => {
+const setEditingRowNameAction = (state, { newValue }) => {
   return {
     ...state,
     editingRow: {
       ...state.editingRow,
-      id: newValue,
+      name: newValue,
+    },
+  };
+};
+
+const setEditingRowTargetSectionActionCreator = dispatch => newValue => {
+  dispatch({
+    type: SET_EDITING_ROW_ACTION_TARGET_SECTION,
+    newValue,
+  });
+};
+
+const setEditingRowTargetSectionAction = (state, { newValue }) => {
+  return {
+    ...state,
+    editingRow: {
+      ...state.editingRow,
+      targetSection: newValue,
     },
   };
 };
@@ -81,19 +101,19 @@ const setEditingRowPointsAction = (state, { newValue }) => {
   };
 };
 
-const setEditingRowsStartDateActionCreator = dispatch => newValue => {
+const setEditingRowsDateJoinedWaitingListActionCreator = dispatch => newValue => {
   dispatch({
-    type: SET_EDITING_ROW_ACTION_START_DATE,
+    type: SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
     newValue,
   });
 };
 
-const setEditingRowStartDateAction = (state, { newValue }) => {
+const setEditingRowDateJoinedWaitingListAction = (state, { newValue }) => {
   return {
     ...state,
     editingRow: {
       ...state.editingRow,
-      startDate: newValue,
+      dateJoinedWaitingList: newValue,
     },
   };
 };
@@ -116,12 +136,14 @@ function reducer(state = {}, action) {
   switch (action.type) {
     case ADD_NEW_ROW:
       return addNewRowAction(state, action);
-    case SET_EDITING_ROW_ACTION_ID:
-      return setEditingRowIdAction(state, action);
+    case SET_EDITING_ROW_ACTION_NAME:
+      return setEditingRowNameAction(state, action);
+    case SET_EDITING_ROW_ACTION_TARGET_SECTION:
+      return setEditingRowTargetSectionAction(state, action);
     case SET_EDITING_ROW_ACTION_POINTS:
       return setEditingRowPointsAction(state, action);
-    case SET_EDITING_ROW_ACTION_START_DATE:
-      return setEditingRowStartDateAction(state, action);
+    case SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST:
+      return setEditingRowDateJoinedWaitingListAction(state, action);
     case SET_IS_EDITING:
       return setIsEditingAction(state, action);
     case SWITCH_ROWS:
@@ -140,9 +162,14 @@ export default function useAdminWaitingListReducer(initialState = {}) {
       addNewRow: addNewRowActionCreator(dispatch),
       switchRows: switchRowsActionCreator(dispatch),
       setIsEditing: setIsEditingActionCreator(dispatch),
-      setEditingRowId: setEditingRowIdActionCreator(dispatch),
+      setEditingRowName: setEditingRowNameActionCreator(dispatch),
+      setEditingRowTargetSection: setEditingRowTargetSectionActionCreator(
+        dispatch
+      ),
       setEditingRowPoints: setEditingRowPointsActionCreator(dispatch),
-      setEditingRowStartDate: setEditingRowsStartDateActionCreator(dispatch),
+      setEditingRowDateJoinedWaitingList: setEditingRowsDateJoinedWaitingListActionCreator(
+        dispatch
+      ),
     },
   ];
 }
