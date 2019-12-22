@@ -1,6 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase';
+import {
+  useFirestoreConnect,
+  useFirestore,
+  isLoaded,
+  isEmpty,
+} from 'react-redux-firebase';
 import { assoc, find, map } from 'ramda';
 import { useTheme } from '@material-ui/core/styles';
 import {
@@ -25,7 +30,7 @@ import ScoutRow from '../common/scout-row';
 import BottomRightFab from './bottom-right-fab';
 import Hamburger from './hamburger';
 import useAdminWaitingListStyles from '../common/use-waiting-list-styles';
-import useAdminWaitingListReducer from './use-admin-waiting-list-reducer';
+import * as actions from './action-creators';
 
 export default function AdminWaitingList() {
   const classes = useAdminWaitingListStyles();
@@ -35,10 +40,13 @@ export default function AdminWaitingList() {
     { collection: 'scouts-sensitive' },
   ]);
 
+  const firestore = useFirestore();
+
   const scouts = useSelector(state => state.firestore.ordered.scouts);
   const scoutsSensitive = useSelector(
     state => state.firestore.ordered['scouts-sensitive']
   );
+  const addRow = useSelector(state => state.addRow);
 
   const allDataLoaded =
     isLoaded(scouts) &&
@@ -56,19 +64,8 @@ export default function AdminWaitingList() {
     }, scouts);
   }
 
-  const [state, actions] = useAdminWaitingListReducer({
-    isEditing: false,
-    editingRow: {
-      id: '',
-      name: '',
-      targetSection: '',
-      points: 0,
-      dateJoinedWaitingList: moment().format('DD/MM/YYYY'),
-    },
-  });
-
   const onDragEnd = ({ source, destination }) => {
-    actions.switchRows({ source, destination });
+    actions.switchRowsActionCreator({ source, destination });
   };
 
   return (
@@ -129,7 +126,7 @@ export default function AdminWaitingList() {
                         )}
                       </Draggable>
                     ))}
-                    {state.isEditing && (
+                    {addRow.isEditing && (
                       <>
                         <TableRow>
                           <TableCell width="25"></TableCell>
@@ -139,9 +136,11 @@ export default function AdminWaitingList() {
                               id="newName"
                               label="name"
                               className={classes.textField}
-                              value={state.editingRow.name}
+                              value={addRow.editingRow.name}
                               onChange={ev =>
-                                actions.setEditingRowName(ev.target.value)
+                                actions.setEditingRowNameActionCreator(
+                                  ev.target.value
+                                )
                               }
                             />
                           </TableCell>
@@ -150,9 +149,9 @@ export default function AdminWaitingList() {
                               id="newTargetSection"
                               label="targetSection"
                               className={classes.textField}
-                              value={state.editingRow.targetSection}
+                              value={addRow.editingRow.targetSection}
                               onChange={ev =>
-                                actions.setEditingRowTargetSection(
+                                actions.setEditingRowTargetSectionActionCreator(
                                   ev.target.value
                                 )
                               }
@@ -164,9 +163,11 @@ export default function AdminWaitingList() {
                               label="points"
                               className={classes.textField}
                               type="number"
-                              value={state.editingRow.points}
+                              value={addRow.editingRow.points}
                               onChange={ev =>
-                                actions.setEditingRowPoints(ev.target.value)
+                                actions.setEditingRowPointsActionCreator(
+                                  ev.target.value
+                                )
                               }
                             />
                           </TableCell>
@@ -183,10 +184,10 @@ export default function AdminWaitingList() {
                                 format="DD/MM/YYYY"
                                 className={classes.textField}
                                 inputValue={
-                                  state.editingRow.dateJoinedWaitingList
+                                  addRow.editingRow.dateJoinedWaitingList
                                 }
                                 onChange={date =>
-                                  actions.setEditingRowDateJoinedWaitingList(
+                                  actions.setEditingRowDateJoinedWaitingListActionCreator(
                                     date.format('DD/MM/YYYY')
                                   )
                                 }
@@ -208,7 +209,9 @@ export default function AdminWaitingList() {
                               aria-label="save"
                               style={{ margin: theme.spacing(0, 1) }}
                               onClick={() =>
-                                actions.addNewRow(state.editingRow)
+                                actions.addNewRowActionCreator(
+                                  addRow.editingRow
+                                )
                               }
                             >
                               <SaveIcon />
@@ -218,7 +221,9 @@ export default function AdminWaitingList() {
                               color="primary"
                               size="small"
                               className={classes.margin}
-                              onClick={() => actions.setIsEditing(false)}
+                              onClick={() =>
+                                actions.setIsEditingActionCreator(false)
+                              }
                             >
                               Cancel
                             </Button>
@@ -234,13 +239,13 @@ export default function AdminWaitingList() {
           </DragDropContext>
         </Paper>
       )}
-      {allDataLoaded && !state.isEditing && (
-        <Zoom key="secondary" in={!state.isEditing} unmountOnExit>
+      {allDataLoaded && !addRow.isEditing && (
+        <Zoom key="secondary" in={!addRow.isEditing} unmountOnExit>
           <BottomRightFab
             color="secondary"
             aria-label="add"
             className={classes.fab}
-            onClick={() => actions.setIsEditing(true)}
+            onClick={() => actions.setIsEditingActionCreator(true)}
           >
             <AddIcon />
           </BottomRightFab>
