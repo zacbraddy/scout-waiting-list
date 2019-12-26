@@ -84,7 +84,6 @@ export default function reducer(
   state = {
     isEditing: false,
     editingRow: {
-      id: '',
       name: '',
       targetSection: '',
       points: 0,

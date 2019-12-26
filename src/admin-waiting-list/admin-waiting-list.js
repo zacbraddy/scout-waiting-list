@@ -1,12 +1,12 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   useFirestoreConnect,
   useFirestore,
   isLoaded,
   isEmpty,
 } from 'react-redux-firebase';
-import { assoc, find, map } from 'ramda';
+import { assoc, compose, dissoc, find, map, prop } from 'ramda';
 import { useTheme } from '@material-ui/core/styles';
 import {
   MuiPickersUtilsProvider,
@@ -42,6 +42,7 @@ export default function AdminWaitingList() {
 
   const firestore = useFirestore();
 
+  const dispatch = useDispatch();
   const scouts = useSelector(state => state.firestore.ordered.scouts);
   const scoutsSensitive = useSelector(
     state => state.firestore.ordered['scouts-sensitive']
@@ -58,14 +59,41 @@ export default function AdminWaitingList() {
 
   if (allDataLoaded) {
     rows = map(scout => {
-      const sensitive = find(s => s['scout-id'] === scout.id, scoutsSensitive);
+      const sensitive = find(s => s.scoutId === scout.id, scoutsSensitive);
 
-      return assoc('name', sensitive['scout-name'], scout);
+      return assoc('name', prop('name', sensitive), scout);
     }, scouts);
   }
 
   const onDragEnd = ({ source, destination }) => {
-    actions.switchRowsActionCreator({ source, destination });
+    actions.switchRowsActionCreator(dispatch)({ source, destination });
+  };
+
+  const setRowToFirestore = async () => {
+    const editingRow = compose(
+      er =>
+        assoc(
+          'dateJoinedWaitingList',
+          firestore.Timestamp.fromDate(
+            moment(er.dateJoinedWaitingList, 'DD/MM/YYYY').toDate()
+          ),
+          er
+        ),
+      prop('editingRow')
+    )(addRow);
+
+    const newScout = await firestore.add(
+      { collection: 'scouts' },
+      dissoc('name', editingRow)
+    );
+
+    return firestore.add(
+      { collection: 'scouts-sensitive' },
+      compose(
+        assoc('name', prop('name', editingRow)),
+        assoc('scoutId', prop('id', newScout))
+      )({})
+    );
   };
 
   return (
@@ -115,11 +143,11 @@ export default function AdminWaitingList() {
                               {row.id}
                             </TableCell>
                             <TableCell>{row.name}</TableCell>
-                            <TableCell>{row['target-section']}</TableCell>
+                            <TableCell>{row.targetSection}</TableCell>
                             <TableCell>{row.points}</TableCell>
                             <TableCell align="right">
                               {moment
-                                .unix(row['date-joined-waiting-list'].seconds)
+                                .unix(row.dateJoinedWaitingList.seconds)
                                 .format('DD/MM/YYYY')}
                             </TableCell>
                           </ScoutRow>
@@ -139,8 +167,8 @@ export default function AdminWaitingList() {
                               value={addRow.editingRow.name}
                               onChange={ev =>
                                 actions.setEditingRowNameActionCreator(
-                                  ev.target.value
-                                )
+                                  dispatch
+                                )(ev.target.value)
                               }
                             />
                           </TableCell>
@@ -152,8 +180,8 @@ export default function AdminWaitingList() {
                               value={addRow.editingRow.targetSection}
                               onChange={ev =>
                                 actions.setEditingRowTargetSectionActionCreator(
-                                  ev.target.value
-                                )
+                                  dispatch
+                                )(ev.target.value)
                               }
                             />
                           </TableCell>
@@ -166,8 +194,8 @@ export default function AdminWaitingList() {
                               value={addRow.editingRow.points}
                               onChange={ev =>
                                 actions.setEditingRowPointsActionCreator(
-                                  ev.target.value
-                                )
+                                  dispatch
+                                )(ev.target.value)
                               }
                             />
                           </TableCell>
@@ -188,8 +216,8 @@ export default function AdminWaitingList() {
                                 }
                                 onChange={date =>
                                   actions.setEditingRowDateJoinedWaitingListActionCreator(
-                                    date.format('DD/MM/YYYY')
-                                  )
+                                    dispatch
+                                  )(date.format('DD/MM/YYYY'))
                                 }
                                 autoOk
                               />
@@ -208,11 +236,7 @@ export default function AdminWaitingList() {
                               variant="contained"
                               aria-label="save"
                               style={{ margin: theme.spacing(0, 1) }}
-                              onClick={() =>
-                                actions.addNewRowActionCreator(
-                                  addRow.editingRow
-                                )
-                              }
+                              onClick={() => setRowToFirestore()}
                             >
                               <SaveIcon />
                               Save
@@ -222,7 +246,9 @@ export default function AdminWaitingList() {
                               size="small"
                               className={classes.margin}
                               onClick={() =>
-                                actions.setIsEditingActionCreator(false)
+                                actions.setIsEditingActionCreator(dispatch)(
+                                  false
+                                )
                               }
                             >
                               Cancel
@@ -245,7 +271,7 @@ export default function AdminWaitingList() {
             color="secondary"
             aria-label="add"
             className={classes.fab}
-            onClick={() => actions.setIsEditingActionCreator(true)}
+            onClick={() => actions.setIsEditingActionCreator(dispatch)(true)}
           >
             <AddIcon />
           </BottomRightFab>
