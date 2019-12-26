@@ -41,7 +41,7 @@ export default function WaitingList() {
                 <TableCell>{row.points}</TableCell>
                 <TableCell align="right">
                   {moment
-                    .unix(row['date-joined-waiting-list'].seconds)
+                    .unix(row.dateJoinedWaitingList.seconds)
                     .format('DD/MM/YYYY')}
                 </TableCell>
               </ScoutRow>
