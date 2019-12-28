@@ -36,8 +36,8 @@ const setIsEditingAction = (state, { newValue }) => {
 const setEditingRowNameAction = (state, { newValue }) => {
   return {
     ...state,
-    editingRow: {
-      ...state.editingRow,
+    addingRow: {
+      ...state.addingRow,
       name: newValue,
     },
   };
@@ -46,8 +46,8 @@ const setEditingRowNameAction = (state, { newValue }) => {
 const setEditingRowTargetSectionAction = (state, { newValue }) => {
   return {
     ...state,
-    editingRow: {
-      ...state.editingRow,
+    addingRow: {
+      ...state.addingRow,
       targetSection: newValue,
     },
   };
@@ -56,8 +56,8 @@ const setEditingRowTargetSectionAction = (state, { newValue }) => {
 const setEditingRowPointsAction = (state, { newValue }) => {
   return {
     ...state,
-    editingRow: {
-      ...state.editingRow,
+    addingRow: {
+      ...state.addingRow,
       points: newValue,
     },
   };
@@ -66,8 +66,8 @@ const setEditingRowPointsAction = (state, { newValue }) => {
 const setEditingRowDateJoinedWaitingListAction = (state, { newValue }) => {
   return {
     ...state,
-    editingRow: {
-      ...state.editingRow,
+    addingRow: {
+      ...state.addingRow,
       dateJoinedWaitingList: newValue,
     },
   };
@@ -83,7 +83,7 @@ const addNewRowAction = (state, { newRow }) => {
 export default function reducer(
   state = {
     isEditing: false,
-    editingRow: {
+    addingRow: {
       name: '',
       targetSection: '',
       points: 0,

@@ -12,24 +12,26 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import moment from 'moment';
-import MomentUtils from '@date-io/moment';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Edit';
+import CancelIcon from '@material-ui/icons/Cancel';
+import Fab from '@material-ui/core/Fab';
+import MomentUtils from '@date-io/moment';
 import Paper from '@material-ui/core/Paper';
 import SaveIcon from '@material-ui/icons/Save';
+import Slide from '@material-ui/core/Slide';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
-import Zoom from '@material-ui/core/Zoom';
-import { Draggable, DragDropContext, Droppable } from 'react-beautiful-dnd';
-import ScoutRow from '../common/scout-row';
-import BottomRightFab from './bottom-right-fab';
-import Hamburger from './hamburger';
+import moment from 'moment';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import BottomRightFabContainer from './bottom-right-fab-container';
 import useAdminWaitingListStyles from '../common/use-waiting-list-styles';
+import EditableWaitingListRow from '../editable-waiting-list-row';
 import * as actions from './action-creators';
 
 export default function AdminWaitingList() {
@@ -47,7 +49,7 @@ export default function AdminWaitingList() {
   const scoutsSensitive = useSelector(
     state => state.firestore.ordered['scouts-sensitive']
   );
-  const addRow = useSelector(state => state.addRow);
+  const { isEditing, addingRow } = useSelector(state => state.adminWaitingList);
 
   const allDataLoaded =
     isLoaded(scouts) &&
@@ -70,27 +72,23 @@ export default function AdminWaitingList() {
   };
 
   const setRowToFirestore = async () => {
-    const editingRow = compose(
-      er =>
-        assoc(
-          'dateJoinedWaitingList',
-          firestore.Timestamp.fromDate(
-            moment(er.dateJoinedWaitingList, 'DD/MM/YYYY').toDate()
-          ),
-          er
-        ),
-      prop('editingRow')
-    )(addRow);
+    const ar = assoc(
+      'dateJoinedWaitingList',
+      firestore.Timestamp.fromDate(
+        moment(addingRow.dateJoinedWaitingList, 'DD/MM/YYYY').toDate()
+      ),
+      addingRow
+    );
 
     const newScout = await firestore.add(
       { collection: 'scouts' },
-      dissoc('name', editingRow)
+      dissoc('name', ar)
     );
 
     return firestore.add(
       { collection: 'scouts-sensitive' },
       compose(
-        assoc('name', prop('name', editingRow)),
+        assoc('name', prop('name', ar)),
         assoc('scoutId', prop('id', newScout))
       )({})
     );
@@ -119,42 +117,14 @@ export default function AdminWaitingList() {
                     ref={droppableProvided.innerRef}
                   >
                     {rows.map((row, index) => (
-                      <Draggable
-                        draggableId={row.id}
+                      <EditableWaitingListRow
+                        row={row}
                         index={index}
+                        isEditing={isEditing}
                         key={row.id}
-                      >
-                        {(draggableProvided, snapshot) => (
-                          <ScoutRow
-                            {...draggableProvided.draggableProps}
-                            ref={draggableProvided.innerRef}
-                            isdragging={`${snapshot.isDragging}`}
-                          >
-                            <TableCell
-                              width="25"
-                              {...draggableProvided.dragHandleProps}
-                            >
-                              <Hamburger
-                                className="fa fa-bars"
-                                color={theme.palette.muted[200]}
-                              />
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                              {row.id}
-                            </TableCell>
-                            <TableCell>{row.name}</TableCell>
-                            <TableCell>{row.targetSection}</TableCell>
-                            <TableCell>{row.points}</TableCell>
-                            <TableCell align="right">
-                              {moment
-                                .unix(row.dateJoinedWaitingList.seconds)
-                                .format('DD/MM/YYYY')}
-                            </TableCell>
-                          </ScoutRow>
-                        )}
-                      </Draggable>
+                      />
                     ))}
-                    {addRow.isEditing && (
+                    {isEditing && (
                       <>
                         <TableRow>
                           <TableCell width="25"></TableCell>
@@ -164,7 +134,7 @@ export default function AdminWaitingList() {
                               id="newName"
                               label="name"
                               className={classes.textField}
-                              value={addRow.editingRow.name}
+                              value={addingRow.name}
                               onChange={ev =>
                                 actions.setEditingRowNameActionCreator(
                                   dispatch
@@ -177,7 +147,7 @@ export default function AdminWaitingList() {
                               id="newTargetSection"
                               label="targetSection"
                               className={classes.textField}
-                              value={addRow.editingRow.targetSection}
+                              value={addingRow.targetSection}
                               onChange={ev =>
                                 actions.setEditingRowTargetSectionActionCreator(
                                   dispatch
@@ -191,7 +161,7 @@ export default function AdminWaitingList() {
                               label="points"
                               className={classes.textField}
                               type="number"
-                              value={addRow.editingRow.points}
+                              value={addingRow.points}
                               onChange={ev =>
                                 actions.setEditingRowPointsActionCreator(
                                   dispatch
@@ -211,9 +181,7 @@ export default function AdminWaitingList() {
                                 label="Start Date"
                                 format="DD/MM/YYYY"
                                 className={classes.textField}
-                                inputValue={
-                                  addRow.editingRow.dateJoinedWaitingList
-                                }
+                                inputValue={addingRow.dateJoinedWaitingList}
                                 onChange={date =>
                                   actions.setEditingRowDateJoinedWaitingListActionCreator(
                                     dispatch
@@ -265,17 +233,64 @@ export default function AdminWaitingList() {
           </DragDropContext>
         </Paper>
       )}
-      {allDataLoaded && !addRow.isEditing && (
-        <Zoom key="secondary" in={!addRow.isEditing} unmountOnExit>
-          <BottomRightFab
-            color="secondary"
-            aria-label="add"
-            className={classes.fab}
-            onClick={() => actions.setIsEditingActionCreator(dispatch)(true)}
+      {allDataLoaded && (
+        <BottomRightFabContainer>
+          <Slide
+            key="add"
+            direction="up"
+            in={isEditing}
+            style={{ transitionDelay: isEditing ? '500ms' : '0ms' }}
+            appear="true"
+            mountOnEnter
+            unmountOnExit
           >
-            <AddIcon />
-          </BottomRightFab>
-        </Zoom>
+            <Fab
+              color="secondary"
+              aria-label="add"
+              className={classes.fab}
+              style={{ margin: theme.spacing(1, 0) }}
+            >
+              <AddIcon />
+            </Fab>
+          </Slide>
+          <Slide
+            key="stopEdit"
+            direction="up"
+            in={isEditing}
+            style={{ transitionDelay: isEditing ? '500ms' : '0ms' }}
+            appear="true"
+            mountOnEnter
+            unmountOnExit
+          >
+            <Fab
+              color="secondary"
+              aria-label="cancel edit"
+              className={classes.fab}
+              onClick={() => actions.setIsEditingActionCreator(dispatch)(false)}
+              style={{ margin: theme.spacing(1, 0) }}
+            >
+              <CancelIcon />
+            </Fab>
+          </Slide>
+          <Slide
+            key="startEdit"
+            direction="up"
+            in={!isEditing}
+            style={{ transitionDelay: !isEditing ? '500ms' : '0ms' }}
+            mountOnEnter
+            unmountOnExit
+          >
+            <Fab
+              color="secondary"
+              aria-label="start edit"
+              className={classes.fab}
+              onClick={() => actions.setIsEditingActionCreator(dispatch)(true)}
+              style={{ margin: theme.spacing(1, 0) }}
+            >
+              <EditIcon />
+            </Fab>
+          </Slide>
+        </BottomRightFabContainer>
       )}
       {!allDataLoaded && <span>Loading...</span>}
     </>
