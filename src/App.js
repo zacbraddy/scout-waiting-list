@@ -13,7 +13,7 @@ import firebaseConfig from './infrastructure/firebase-config';
 import store from './infrastructure/store';
 
 import AppNavBar from './app-nav-bar';
-import AuthenticatedAdminWaitingList from './admin-waiting-list';
+import AuthenticatedAdminWaitingList from './authenticated-admin-waiting-list';
 import WaitingList from './waiting-list';
 import theme from './theme';
 

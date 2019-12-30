@@ -8,7 +8,7 @@ import {
   SET_EDITING_ROW_ACTION_TARGET_SECTION,
   SET_EDITING_ROW_ACTION_POINTS,
   SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
-} from './actions';
+} from './actions-names';
 
 const switchRowsAction = (state, { sourceIndex, destinationIndex }) => {
   const { rows } = state;
@@ -73,13 +73,6 @@ const setEditingRowDateJoinedWaitingListAction = (state, { newValue }) => {
   };
 };
 
-const addNewRowAction = (state, { newRow }) => {
-  return {
-    ...state,
-    rows: [...state.rows, newRow],
-  };
-};
-
 export default function reducer(
   state = {
     isEditing: false,
@@ -93,8 +86,6 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case ADD_NEW_ROW:
-      return addNewRowAction(state, action);
     case SET_EDITING_ROW_ACTION_NAME:
       return setEditingRowNameAction(state, action);
     case SET_EDITING_ROW_ACTION_TARGET_SECTION:

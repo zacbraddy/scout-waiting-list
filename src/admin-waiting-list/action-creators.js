@@ -6,7 +6,7 @@ import {
   SET_EDITING_ROW_ACTION_TARGET_SECTION,
   SET_EDITING_ROW_ACTION_POINTS,
   SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
-} from './actions';
+} from './actions-names';
 
 export const switchRowsActionCreator = dispatch => ({
   source,
@@ -14,7 +14,7 @@ export const switchRowsActionCreator = dispatch => ({
 }) => {
   if (!destination || source.index === destination.index) return;
 
-  dispatch({
+  return dispatch({
     type: SWITCH_ROWS,
     sourceIndex: source.index,
     destinationIndex: destination.index,
@@ -22,43 +22,36 @@ export const switchRowsActionCreator = dispatch => ({
 };
 
 export const setIsEditingActionCreator = dispatch => newValue => {
-  dispatch({
+  return dispatch({
     type: SET_IS_EDITING,
     newValue,
   });
 };
 
 export const setEditingRowNameActionCreator = dispatch => newValue => {
-  dispatch({
+  return dispatch({
     type: SET_EDITING_ROW_ACTION_NAME,
     newValue,
   });
 };
 
 export const setEditingRowTargetSectionActionCreator = dispatch => newValue => {
-  dispatch({
+  return dispatch({
     type: SET_EDITING_ROW_ACTION_TARGET_SECTION,
     newValue,
   });
 };
 
 export const setEditingRowPointsActionCreator = dispatch => newValue => {
-  dispatch({
+  return dispatch({
     type: SET_EDITING_ROW_ACTION_POINTS,
     newValue,
   });
 };
 
 export const setEditingRowDateJoinedWaitingListActionCreator = dispatch => newValue => {
-  dispatch({
+  return dispatch({
     type: SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
     newValue,
-  });
-};
-
-export const addNewRowActionCreator = dispatch => newRow => {
-  dispatch({
-    type: ADD_NEW_ROW,
-    newRow,
   });
 };
