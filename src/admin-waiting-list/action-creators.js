@@ -2,6 +2,7 @@ import {
   ADD_NEW_ROW,
   SWITCH_ROWS,
   SET_IS_EDITING,
+  SET_IS_ADDING,
   SET_EDITING_ROW_ACTION_NAME,
   SET_EDITING_ROW_ACTION_TARGET_SECTION,
   SET_EDITING_ROW_ACTION_POINTS,
@@ -24,6 +25,13 @@ export const switchRowsActionCreator = dispatch => ({
 export const setIsEditingActionCreator = dispatch => newValue => {
   return dispatch({
     type: SET_IS_EDITING,
+    newValue,
+  });
+};
+
+export const setIsAddingActionCreator = dispatch => newValue => {
+  return dispatch({
+    type: SET_IS_ADDING,
     newValue,
   });
 };

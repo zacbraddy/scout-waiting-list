@@ -2,6 +2,7 @@ import moment from 'moment';
 
 import {
   ADD_NEW_ROW,
+  SET_IS_ADDING,
   SWITCH_ROWS,
   SET_IS_EDITING,
   SET_EDITING_ROW_ACTION_NAME,
@@ -30,6 +31,13 @@ const setIsEditingAction = (state, { newValue }) => {
   return {
     ...state,
     isEditing: newValue,
+  };
+};
+
+const setIsAddingAction = (state, { newValue }) => {
+  return {
+    ...state,
+    isAdding: newValue,
   };
 };
 
@@ -76,6 +84,7 @@ const setEditingRowDateJoinedWaitingListAction = (state, { newValue }) => {
 export default function reducer(
   state = {
     isEditing: false,
+    isAdding: false,
     addingRow: {
       name: '',
       targetSection: '',
@@ -96,6 +105,8 @@ export default function reducer(
       return setEditingRowDateJoinedWaitingListAction(state, action);
     case SET_IS_EDITING:
       return setIsEditingAction(state, action);
+    case SET_IS_ADDING:
+      return setIsAddingAction(state, action);
     case SWITCH_ROWS:
       return switchRowsAction(state, action);
     default:

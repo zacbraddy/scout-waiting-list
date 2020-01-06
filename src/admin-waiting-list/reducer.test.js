@@ -13,6 +13,14 @@ describe('Admin waiting list reducer', () => {
     expect(result.isEditing).toBe(true);
   });
 
+  test('that it sets isAdding correctly', () => {
+    const result = actions.setIsAddingActionCreator(
+      fakeDispatch({ isAdding: false })
+    )(true);
+
+    expect(result.isAdding).toBe(true);
+  });
+
   test('that it sets the name of the addingRow correctly', () => {
     const result = actions.setEditingRowNameActionCreator(
       fakeDispatch({ addingRow: { name: `I'm Joker` } })
