@@ -6,7 +6,7 @@ import TableCell from '@material-ui/core/TableCell';
 import ScoutRow from '../common/scout-row';
 import Hamburger from './hamburger';
 
-export default ({ row, index, isEditing }) => {
+export default ({ row, index }) => {
   const theme = useTheme();
 
   return (

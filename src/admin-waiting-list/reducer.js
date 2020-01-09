@@ -31,6 +31,7 @@ const setIsEditingAction = (state, { newValue }) => {
   return {
     ...state,
     isEditing: newValue,
+    isAdding: !newValue ? false : state.isAdding,
   };
 };
 

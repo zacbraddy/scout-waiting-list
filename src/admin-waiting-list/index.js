@@ -3,9 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase';
 import { assoc, find, map, prop } from 'ramda';
 import { useTheme } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import CancelIcon from '@material-ui/icons/Cancel';
 import Fab from '@material-ui/core/Fab';
 import Paper from '@material-ui/core/Paper';
 import Slide from '@material-ui/core/Slide';
@@ -18,6 +15,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import BottomRightFabContainer from './bottom-right-fab-container';
 import useAdminWaitingListStyles from '../common/use-waiting-list-styles';
 import DraggableWaitingListRow from '../draggable-waiting-list-row';
+import EditableWaitingListRow from '../editable-waiting-list-row';
 import AddWaitingListRow from '../add-waiting-list-row';
 import * as actions from './action-creators';
 
@@ -56,6 +54,14 @@ export default function AdminWaitingList() {
     actions.switchRowsActionCreator(dispatch)({ source, destination });
   };
 
+  const renderDisplayRowBasedOnState = (row, index, isEditing) => {
+    return isEditing ? (
+      <EditableWaitingListRow row={row} index={index} key={row.id} />
+    ) : (
+      <DraggableWaitingListRow row={row} index={index} key={row.id} />
+    );
+  };
+
   return (
     <>
       {allDataLoaded && (
@@ -78,14 +84,9 @@ export default function AdminWaitingList() {
                     {...droppableProvided.droppableProps}
                     ref={droppableProvided.innerRef}
                   >
-                    {rows.map((row, index) => (
-                      <DraggableWaitingListRow
-                        row={row}
-                        index={index}
-                        isEditing={isEditing}
-                        key={row.id}
-                      />
-                    ))}
+                    {rows.map((row, index) =>
+                      renderDisplayRowBasedOnState(row, index, isEditing)
+                    )}
                     {isAdding && <AddWaitingListRow />}
                     {droppableProvided.placeholder}
                   </TableBody>
@@ -115,7 +116,7 @@ export default function AdminWaitingList() {
               onClick={() => actions.setIsAddingActionCreator(dispatch)(true)}
               style={{ margin: theme.spacing(1, 0) }}
             >
-              <AddIcon />
+              <i class="fa fa-plus" />
             </Fab>
           </Slide>
           <Slide
@@ -134,7 +135,7 @@ export default function AdminWaitingList() {
               onClick={() => actions.setIsEditingActionCreator(dispatch)(false)}
               style={{ margin: theme.spacing(1, 0) }}
             >
-              <CancelIcon />
+              <i class="fa fa-close" />
             </Fab>
           </Slide>
           <Slide
@@ -152,7 +153,7 @@ export default function AdminWaitingList() {
               onClick={() => actions.setIsEditingActionCreator(dispatch)(true)}
               style={{ margin: theme.spacing(1, 0) }}
             >
-              <EditIcon />
+              <i class="fa fa-pen" />
             </Fab>
           </Slide>
         </BottomRightFabContainer>
