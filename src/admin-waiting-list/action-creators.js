@@ -1,5 +1,4 @@
 import {
-  ADD_NEW_ROW,
   SWITCH_ROWS,
   SET_IS_EDITING,
   SET_IS_ADDING,

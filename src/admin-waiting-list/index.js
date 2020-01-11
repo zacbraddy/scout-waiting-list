@@ -105,7 +105,7 @@ export default function AdminWaitingList() {
             style={{
               transitionDelay: isEditing && !isAdding ? '500ms' : '0ms',
             }}
-            appear="true"
+            appear={true}
             mountOnEnter
             unmountOnExit
           >
@@ -116,7 +116,7 @@ export default function AdminWaitingList() {
               onClick={() => actions.setIsAddingActionCreator(dispatch)(true)}
               style={{ margin: theme.spacing(1, 0) }}
             >
-              <i class="fa fa-plus" />
+              <i className="fa fa-plus" />
             </Fab>
           </Slide>
           <Slide
@@ -124,7 +124,7 @@ export default function AdminWaitingList() {
             direction="up"
             in={isEditing}
             style={{ transitionDelay: isEditing ? '500ms' : '0ms' }}
-            appear="true"
+            appear={true}
             mountOnEnter
             unmountOnExit
           >
@@ -135,7 +135,7 @@ export default function AdminWaitingList() {
               onClick={() => actions.setIsEditingActionCreator(dispatch)(false)}
               style={{ margin: theme.spacing(1, 0) }}
             >
-              <i class="fa fa-close" />
+              <i className="fa fa-close" />
             </Fab>
           </Slide>
           <Slide
@@ -153,7 +153,7 @@ export default function AdminWaitingList() {
               onClick={() => actions.setIsEditingActionCreator(dispatch)(true)}
               style={{ margin: theme.spacing(1, 0) }}
             >
-              <i class="fa fa-pen" />
+              <i className="fa fa-pen" />
             </Fab>
           </Slide>
         </BottomRightFabContainer>

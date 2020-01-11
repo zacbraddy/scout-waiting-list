@@ -10,7 +10,7 @@ export default () => {
   return (
     <Button>
       <RowIcon>
-        <i class="fa fa-pen" color={theme.palette.muted[200]} />
+        <i className="fa fa-pen" color={theme.palette.muted[200]} />
       </RowIcon>
     </Button>
   );

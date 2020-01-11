@@ -1,7 +1,6 @@
 import moment from 'moment';
 
 import {
-  ADD_NEW_ROW,
   SET_IS_ADDING,
   SWITCH_ROWS,
   SET_IS_EDITING,
