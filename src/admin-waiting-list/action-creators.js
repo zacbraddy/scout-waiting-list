@@ -1,12 +1,4 @@
-import {
-  SWITCH_ROWS,
-  SET_IS_EDITING,
-  SET_IS_ADDING,
-  SET_EDITING_ROW_ACTION_NAME,
-  SET_EDITING_ROW_ACTION_TARGET_SECTION,
-  SET_EDITING_ROW_ACTION_POINTS,
-  SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
-} from './actions-names';
+import { SWITCH_ROWS, SET_IS_EDITING, SET_IS_ADDING } from './action-names';
 
 export const switchRowsActionCreator = dispatch => ({
   source,
@@ -31,34 +23,6 @@ export const setIsEditingActionCreator = dispatch => newValue => {
 export const setIsAddingActionCreator = dispatch => newValue => {
   return dispatch({
     type: SET_IS_ADDING,
-    newValue,
-  });
-};
-
-export const setEditingRowNameActionCreator = dispatch => newValue => {
-  return dispatch({
-    type: SET_EDITING_ROW_ACTION_NAME,
-    newValue,
-  });
-};
-
-export const setEditingRowTargetSectionActionCreator = dispatch => newValue => {
-  return dispatch({
-    type: SET_EDITING_ROW_ACTION_TARGET_SECTION,
-    newValue,
-  });
-};
-
-export const setEditingRowPointsActionCreator = dispatch => newValue => {
-  return dispatch({
-    type: SET_EDITING_ROW_ACTION_POINTS,
-    newValue,
-  });
-};
-
-export const setEditingRowDateJoinedWaitingListActionCreator = dispatch => newValue => {
-  return dispatch({
-    type: SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
     newValue,
   });
 };

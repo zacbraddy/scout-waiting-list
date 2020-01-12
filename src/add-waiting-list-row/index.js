@@ -14,13 +14,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
-import * as actions from '../admin-waiting-list/action-creators';
+import * as actions from './action-creators';
+import * as adminWaitingListActions from '../admin-waiting-list/action-creators';
 import useAdminWaitingListStyles from '../common/use-waiting-list-styles';
 
 export default () => {
   const classes = useAdminWaitingListStyles();
   const theme = useTheme();
-  const { addingRow } = useSelector(state => state.adminWaitingList);
+  const addingRow = useSelector(state => state.addingRow);
   const dispatch = useDispatch();
   const firestore = useFirestore();
 
@@ -134,7 +135,9 @@ export default () => {
             color="primary"
             size="small"
             className={classes.margin}
-            onClick={() => actions.setIsAddingActionCreator(dispatch)(false)}
+            onClick={() =>
+              adminWaitingListActions.setIsAddingActionCreator(dispatch)(false)
+            }
           >
             Cancel
           </Button>
