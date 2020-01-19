@@ -56,7 +56,12 @@ export default function AdminWaitingList() {
 
   const renderDisplayRowBasedOnState = (row, index, isEditing) => {
     return isEditing ? (
-      <EditableWaitingListRow row={row} index={index} key={row.id} />
+      <EditableWaitingListRow
+        isEditing={isEditing}
+        row={row}
+        index={index}
+        key={row.id}
+      />
     ) : (
       <DraggableWaitingListRow row={row} index={index} key={row.id} />
     );
@@ -122,7 +127,7 @@ export default function AdminWaitingList() {
           <Slide
             key="stopEdit"
             direction="up"
-            in={isEditing}
+            in={!!isEditing}
             style={{ transitionDelay: isEditing ? '500ms' : '0ms' }}
             appear={true}
             mountOnEnter

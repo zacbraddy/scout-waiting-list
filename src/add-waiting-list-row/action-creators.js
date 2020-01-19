@@ -1,34 +1,34 @@
 import {
-  SET_EDITING_ROW_ACTION_NAME,
-  SET_EDITING_ROW_ACTION_TARGET_SECTION,
-  SET_EDITING_ROW_ACTION_POINTS,
-  SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
+  SET_ADDING_ROW_ACTION_NAME,
+  SET_ADDING_ROW_ACTION_TARGET_SECTION,
+  SET_ADDING_ROW_ACTION_POINTS,
+  SET_ADDING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
 } from './action-names';
 
-export const setEditingRowNameActionCreator = dispatch => newValue => {
+export const setAddingRowNameActionCreator = dispatch => newValue => {
   return dispatch({
-    type: SET_EDITING_ROW_ACTION_NAME,
+    type: SET_ADDING_ROW_ACTION_NAME,
     newValue,
   });
 };
 
-export const setEditingRowTargetSectionActionCreator = dispatch => newValue => {
+export const setAddingRowTargetSectionActionCreator = dispatch => newValue => {
   return dispatch({
-    type: SET_EDITING_ROW_ACTION_TARGET_SECTION,
+    type: SET_ADDING_ROW_ACTION_TARGET_SECTION,
     newValue,
   });
 };
 
-export const setEditingRowPointsActionCreator = dispatch => newValue => {
+export const setAddingRowPointsActionCreator = dispatch => newValue => {
   return dispatch({
-    type: SET_EDITING_ROW_ACTION_POINTS,
+    type: SET_ADDING_ROW_ACTION_POINTS,
     newValue,
   });
 };
 
-export const setEditingRowDateJoinedWaitingListActionCreator = dispatch => newValue => {
+export const setAddingRowDateJoinedWaitingListActionCreator = dispatch => newValue => {
   return dispatch({
-    type: SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
+    type: SET_ADDING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
     newValue,
   });
 };

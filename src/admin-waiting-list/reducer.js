@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 import { SET_IS_ADDING, SWITCH_ROWS, SET_IS_EDITING } from './action-names';
 
 const switchRowsAction = (state, { sourceIndex, destinationIndex }) => {
@@ -37,12 +35,6 @@ export default function reducer(
   state = {
     isEditing: false,
     isAdding: false,
-    addingRow: {
-      name: '',
-      targetSection: '',
-      points: 0,
-      dateJoinedWaitingList: moment().format('DD/MM/YYYY'),
-    },
   },
   action
 ) {

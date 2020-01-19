@@ -7,12 +7,14 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import { useTheme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import ScoutRow from '../common/scout-row';
 import useWaitingListStyles from '../common/use-waiting-list-styles';
 
 export default function WaitingList() {
   const classes = useWaitingListStyles();
+  const theme = useTheme();
   useFirestoreConnect([{ collection: 'scouts' }]);
 
   const scouts = useSelector(state => state.firestore.ordered.scouts);
@@ -42,7 +44,7 @@ export default function WaitingList() {
                 <TableCell align="right">
                   {moment
                     .unix(row.dateJoinedWaitingList.seconds)
-                    .format('DD/MM/YYYY')}
+                    .format(theme.dateFormat)}
                 </TableCell>
               </ScoutRow>
             ))}

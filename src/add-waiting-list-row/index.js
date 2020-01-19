@@ -9,7 +9,6 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import SaveIcon from '@material-ui/icons/Save';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
@@ -29,7 +28,7 @@ export default () => {
     const ar = assoc(
       'dateJoinedWaitingList',
       firestore.Timestamp.fromDate(
-        moment(addingRow.dateJoinedWaitingList, 'DD/MM/YYYY').toDate()
+        moment(addingRow.dateJoinedWaitingList, theme.dateFormat).toDate()
       ),
       addingRow
     );
@@ -51,7 +50,10 @@ export default () => {
   return (
     <>
       <TableRow>
-        <TableCell width="25"></TableCell>
+        <TableCell
+          width={`${theme.waitingList.controlColumnWidth}`}
+          height={`${theme.waitingList.controlColumnHeight}`}
+        ></TableCell>
         <TableCell />
         <TableCell>
           <TextField
@@ -60,7 +62,7 @@ export default () => {
             className={classes.textField}
             value={addingRow.name}
             onChange={ev =>
-              actions.setEditingRowNameActionCreator(dispatch)(ev.target.value)
+              actions.setAddingRowNameActionCreator(dispatch)(ev.target.value)
             }
           />
         </TableCell>
@@ -71,7 +73,7 @@ export default () => {
             className={classes.textField}
             value={addingRow.targetSection}
             onChange={ev =>
-              actions.setEditingRowTargetSectionActionCreator(dispatch)(
+              actions.setAddingRowTargetSectionActionCreator(dispatch)(
                 ev.target.value
               )
             }
@@ -85,9 +87,7 @@ export default () => {
             type="number"
             value={addingRow.points}
             onChange={ev =>
-              actions.setEditingRowPointsActionCreator(dispatch)(
-                ev.target.value
-              )
+              actions.setAddingRowPointsActionCreator(dispatch)(ev.target.value)
             }
           />
         </TableCell>
@@ -101,13 +101,13 @@ export default () => {
               variant="inline"
               id="newPoints"
               label="Start Date"
-              format="DD/MM/YYYY"
+              format={`${theme.dateFormat}`}
               className={classes.textField}
               inputValue={addingRow.dateJoinedWaitingList}
               onChange={date =>
-                actions.setEditingRowDateJoinedWaitingListActionCreator(
+                actions.setAddingRowDateJoinedWaitingListActionCreator(
                   dispatch
-                )(date.format('DD/MM/YYYY'))
+                )(date.format(theme.dateFormat))
               }
               autoOk
             />
@@ -128,7 +128,10 @@ export default () => {
             style={{ margin: theme.spacing(0, 1) }}
             onClick={() => setRowToFirestore()}
           >
-            <SaveIcon />
+            <i
+              style={{ marginRight: theme.spacing(1) }}
+              className="fa fa-save"
+            />
             Save
           </Button>
           <Button

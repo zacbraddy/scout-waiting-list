@@ -17,7 +17,11 @@ export default ({ row, index }) => {
           ref={draggableProvided.innerRef}
           isdragging={`${snapshot.isDragging}`}
         >
-          <TableCell width="25" {...draggableProvided.dragHandleProps}>
+          <TableCell
+            width={`${theme.waitingList.controlColumnWidth}`}
+            height={`${theme.waitingList.controlColumnHeight}`}
+            {...draggableProvided.dragHandleProps}
+          >
             <Hamburger
               className="fa fa-bars"
               color={theme.palette.muted[200]}
@@ -32,7 +36,7 @@ export default ({ row, index }) => {
           <TableCell align="right">
             {moment
               .unix(row.dateJoinedWaitingList.seconds)
-              .format('DD/MM/YYYY')}
+              .format(theme.dateFormat)}
           </TableCell>
         </ScoutRow>
       )}
