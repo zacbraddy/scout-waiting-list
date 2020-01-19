@@ -15,7 +15,7 @@ import useWaitingListStyles from '../common/use-waiting-list-styles';
 export default function WaitingList() {
   const classes = useWaitingListStyles();
   const theme = useTheme();
-  useFirestoreConnect([{ collection: 'scouts' }]);
+  useFirestoreConnect([{ collection: 'scouts', orderBy: ['rank'] }]);
 
   const scouts = useSelector(state => state.firestore.ordered.scouts);
 

@@ -17,7 +17,7 @@ import * as actions from './action-creators';
 import * as adminWaitingListActions from '../admin-waiting-list/action-creators';
 import useAdminWaitingListStyles from '../common/use-waiting-list-styles';
 
-export default () => {
+export default ({ nextRank }) => {
   const classes = useAdminWaitingListStyles();
   const theme = useTheme();
   const addingRow = useSelector(state => state.addingRow);
@@ -35,7 +35,10 @@ export default () => {
 
     const newScout = await firestore.add(
       { collection: 'scouts' },
-      dissoc('name', ar)
+      compose(
+        dissoc('name'),
+        assoc('rank', nextRank)
+      )(ar)
     );
 
     return firestore.add(
