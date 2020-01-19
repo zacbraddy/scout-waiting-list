@@ -29,7 +29,7 @@ export default ({ row }) => {
         style={{ padding: '8px' }}
       >
         <div style={{ display: 'flex' }}>
-          <SaveButton />
+          <SaveButton id={row.id} />
           <CancelButton />
         </div>
       </TableCell>
