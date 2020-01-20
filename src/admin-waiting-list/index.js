@@ -23,6 +23,7 @@ import DraggableWaitingListRow from '../draggable-waiting-list-row';
 import EditableWaitingListRow from '../editable-waiting-list-row';
 import AddWaitingListRow from '../add-waiting-list-row';
 import * as actions from './action-creators';
+import shuffleListAfterDrag from './shuffle-list-after-drag';
 
 export default function AdminWaitingList() {
   const classes = useAdminWaitingListStyles();
@@ -53,43 +54,15 @@ export default function AdminWaitingList() {
   }
 
   const onDragEnd = async ({ source, destination, draggableId }) => {
+    console.log({ source, destination, draggableId });
     if (source.index === destination.index) return;
 
-    await Promise.all(
-      map(scout => {
-        let shuffleDirection = destination.index < source.index ? 1 : -1;
-        const shiftScoutRank = newRank =>
-          compose(
-            assoc('rank', newRank),
-            dissoc('id')
-          );
-
-        if (
-          scout.id !== draggableId &&
-          shuffleDirection < 0 &&
-          scout.rank >= destination.index
-        )
-          return firestore.set(
-            { collection: 'scouts', doc: scout.id },
-            shiftScoutRank(scout.rank + shuffleDirection)(scout)
-          );
-
-        if (
-          scout.id !== draggableId &&
-          shuffleDirection > 0 &&
-          scout.rank <= destination.index
-        )
-          return firestore.set(
-            { collection: 'scouts', doc: scout.id },
-            shiftScoutRank(scout.rank + shuffleDirection)(scout)
-          );
-
-        if (scout.id === draggableId)
-          return firestore.set(
-            { collection: 'scouts', doc: draggableId },
-            assoc('rank', destination.index, scout)
-          );
-      }, scouts)
+    await shuffleListAfterDrag(
+      firestore.update,
+      scouts,
+      source.index,
+      destination.index,
+      draggableId
     );
     //actions.switchRowsActionCreator(dispatch)({ source, destination });
   };
