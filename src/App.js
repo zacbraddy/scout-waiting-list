@@ -9,11 +9,11 @@ import { ThemeProvider } from '@material-ui/styles';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import firebaseConfig from './auth/firebase-config';
-import store from './auth/store';
+import firebaseConfig from './infrastructure/firebase-config';
+import store from './infrastructure/store';
 
 import AppNavBar from './app-nav-bar';
-import AuthenticatedAdminWaitingList from './admin-waiting-list';
+import AuthenticatedAdminWaitingList from './authenticated-admin-waiting-list';
 import WaitingList from './waiting-list';
 import theme from './theme';
 
