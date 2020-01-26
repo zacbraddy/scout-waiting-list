@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase';
+import { assoc, compose, filter, map, prop, sortBy, toPairs } from 'ramda';
 import moment from 'moment';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -17,7 +18,14 @@ export default function WaitingList() {
   const theme = useTheme();
   useFirestoreConnect([{ collection: 'scouts', orderBy: ['rank'] }]);
 
-  const scouts = useSelector(state => state.firestore.ordered.scouts);
+  const scouts = useSelector(state =>
+    compose(
+      sortBy(prop('rank')),
+      map(pair => assoc('id', pair[0], pair[1])),
+      filter(pair => pair[1]),
+      toPairs
+    )(state.firestore.data.scouts)
+  );
 
   if (!isLoaded(scouts) || isEmpty(scouts)) {
     return <span>Loading...</span>;
@@ -30,8 +38,9 @@ export default function WaitingList() {
           <TableHead>
             <TableRow>
               <TableCell>Scout Id</TableCell>
+              <TableCell>Target section</TableCell>
               <TableCell>Points</TableCell>
-              <TableCell align="right">Start Date</TableCell>
+              <TableCell align="right">Date Joined Waiting List</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -40,6 +49,7 @@ export default function WaitingList() {
                 <TableCell component="th" scope="row">
                   {row.id}
                 </TableCell>
+                <TableCell>{row.targetSection}</TableCell>
                 <TableCell>{row.points}</TableCell>
                 <TableCell align="right">
                   {moment

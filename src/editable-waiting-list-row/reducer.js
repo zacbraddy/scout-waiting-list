@@ -39,13 +39,14 @@ const setEditingRowDateJoinedWaitingListAction = (state, { newValue }) => {
 
 const setEditingRow = (
   state,
-  { name, points, targetSection, dateJoinedWaitingList }
+  { name, points, targetSection, dateJoinedWaitingList, rank }
 ) => {
   return {
     name,
     points,
     targetSection,
     dateJoinedWaitingList,
+    rank,
   };
 };
 
@@ -55,6 +56,7 @@ export default function reducer(
     targetSection: '',
     points: 0,
     dateJoinedWaitingList: moment().format(dateFormat),
+    rank: -1,
   },
   action
 ) {

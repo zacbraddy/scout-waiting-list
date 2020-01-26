@@ -1,4 +1,5 @@
 import React from 'react';
+import { path } from 'ramda';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { useTheme } from '@material-ui/core/styles';
@@ -10,7 +11,7 @@ import { setIsEditingActionCreator } from '../admin-waiting-list/action-creators
 import { setEditingRow } from './action-creators';
 
 export default ({
-  row: { id, name, points, targetSection, dateJoinedWaitingList },
+  row: { id, name, points, targetSection, dateJoinedWaitingList, rank },
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -22,8 +23,9 @@ export default ({
       points,
       targetSection,
       dateJoinedWaitingList: moment
-        .unix(dateJoinedWaitingList.seconds)
+        .unix(path(['seconds'], dateJoinedWaitingList))
         .format(theme.dateFormat),
+      rank,
     });
   };
 

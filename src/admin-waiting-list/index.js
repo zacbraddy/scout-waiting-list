@@ -4,9 +4,17 @@ import {
   useFirestoreConnect,
   useFirestore,
   isLoaded,
-  isEmpty,
 } from 'react-redux-firebase';
-import { assoc, compose, dissoc, find, map, prop } from 'ramda';
+import {
+  assoc,
+  compose,
+  find,
+  filter,
+  map,
+  prop,
+  sortBy,
+  toPairs,
+} from 'ramda';
 import { useTheme } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import Paper from '@material-ui/core/Paper';
@@ -35,7 +43,14 @@ export default function AdminWaitingList() {
   const firestore = useFirestore();
 
   const dispatch = useDispatch();
-  const scouts = useSelector(state => state.firestore.ordered.scouts);
+  const scouts = useSelector(state =>
+    compose(
+      sortBy(prop('rank')),
+      map(pair => assoc('id', pair[0], pair[1])),
+      filter(pair => pair[1]),
+      toPairs
+    )(state.firestore.data.scouts)
+  );
   const scoutsSensitive = useSelector(
     state => state.firestore.ordered['scouts-sensitive']
   );

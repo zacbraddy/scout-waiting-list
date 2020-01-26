@@ -1,5 +1,5 @@
 import React from 'react';
-import { type } from 'ramda';
+import { path, type } from 'ramda';
 import moment from 'moment';
 import { useTheme } from '@material-ui/core/styles';
 import myTheme from '../theme.js';
@@ -32,7 +32,9 @@ export default ({ row, index, isEditing }) => {
       <TableCell>{row.targetSection}</TableCell>
       <TableCell>{row.points}</TableCell>
       <TableCell align="right">
-        {moment.unix(row.dateJoinedWaitingList.seconds).format(theme.dateFormat)}
+        {moment
+          .unix(path(['dateJoinedWaitingList', 'seconds'], row))
+          .format(theme.dateFormat)}
       </TableCell>
     </ScoutRow>
   );

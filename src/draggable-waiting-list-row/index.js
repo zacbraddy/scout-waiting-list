@@ -1,4 +1,5 @@
 import React from 'react';
+import { path } from 'ramda';
 import moment from 'moment';
 import { Draggable } from 'react-beautiful-dnd';
 import { useTheme } from '@material-ui/core/styles';
@@ -35,7 +36,7 @@ export default ({ row, index }) => {
           <TableCell>{row.points}</TableCell>
           <TableCell align="right">
             {moment
-              .unix(row.dateJoinedWaitingList.seconds)
+              .unix(path(['dateJoinedWaitingList', 'seconds'], row))
               .format(theme.dateFormat)}
           </TableCell>
         </ScoutRow>

@@ -41,13 +41,15 @@ export default ({ nextRank }) => {
       )(ar)
     );
 
-    return firestore.add(
+    await firestore.add(
       { collection: 'scouts-sensitive' },
       compose(
         assoc('name', prop('name', ar)),
         assoc('scoutId', prop('id', newScout))
       )({})
     );
+
+    actions.clearAddingRow(dispatch)();
   };
 
   return (

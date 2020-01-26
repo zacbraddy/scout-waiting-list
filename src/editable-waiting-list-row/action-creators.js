@@ -39,6 +39,7 @@ export const setEditingRow = dispatch => ({
   points,
   targetSection,
   dateJoinedWaitingList,
+  rank,
 }) => {
   return dispatch({
     type: SET_EDITING_ROW,
@@ -46,5 +47,6 @@ export const setEditingRow = dispatch => ({
     points,
     targetSection,
     dateJoinedWaitingList,
+    rank,
   });
 };

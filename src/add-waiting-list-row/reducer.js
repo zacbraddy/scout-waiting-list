@@ -2,6 +2,7 @@ import moment from 'moment';
 import { dateFormat } from '../theme';
 
 import {
+  CLEAR_ADDING_ROW,
   SET_ADDING_ROW_ACTION_NAME,
   SET_ADDING_ROW_ACTION_TARGET_SECTION,
   SET_ADDING_ROW_ACTION_POINTS,
@@ -36,6 +37,14 @@ const setAddingRowDateJoinedWaitingListAction = (state, { newValue }) => {
   };
 };
 
+const clearAddingRow = state => ({
+  ...state,
+  name: '',
+  targetSection: '',
+  points: 0,
+  dateJoinedWaitingList: moment().format(dateFormat),
+});
+
 export default function reducer(
   state = {
     name: '',
@@ -54,6 +63,8 @@ export default function reducer(
       return setAddingRowPointsAction(state, action);
     case SET_ADDING_ROW_ACTION_DATE_JOINED_WAITING_LIST:
       return setAddingRowDateJoinedWaitingListAction(state, action);
+    case CLEAR_ADDING_ROW:
+      return clearAddingRow(state);
     default:
       return state;
   }

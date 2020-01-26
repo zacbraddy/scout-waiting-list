@@ -1,4 +1,5 @@
 import {
+  CLEAR_ADDING_ROW,
   SET_ADDING_ROW_ACTION_NAME,
   SET_ADDING_ROW_ACTION_TARGET_SECTION,
   SET_ADDING_ROW_ACTION_POINTS,
@@ -32,3 +33,8 @@ export const setAddingRowDateJoinedWaitingListActionCreator = dispatch => newVal
     newValue,
   });
 };
+
+export const clearAddingRow = dispatch => () =>
+  dispatch({
+    type: CLEAR_ADDING_ROW,
+  });
