@@ -1,9 +1,10 @@
 import firebase from 'firebase/app';
+import { createFirestoreInstance } from 'redux-firestore';
 import 'firebase/auth';
-import store from './store';
 import 'firebase/database';
+import 'firebase/firestore';
+import store from './store';
 // import 'firebase/functions' // <- needed if using httpsCallable
-// import { createFirestoreInstance, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 
 const fbConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -18,18 +19,19 @@ const fbConfig = {
 
 const rrfConfig = {
   userProfile: 'users',
+  useFirestoreForProfile: true,
 };
 
 // Initialize firebase instance
 firebase.initializeApp(fbConfig);
 
 // Initialize other services on firebase instance
-// firebase.firestore() // <- needed if using firestore
+firebase.firestore();
 // firebase.functions() // <- needed if using httpsCallable
 
 export default {
   firebase,
   config: rrfConfig,
   dispatch: store.dispatch,
-  // createFirestoreInstance // <- needed if using firestore
+  createFirestoreInstance,
 };

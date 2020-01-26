@@ -4,6 +4,8 @@ import teal from '@material-ui/core/colors/teal';
 import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 
+export const dateFormat = 'DD/MM/YYYY';
+
 export default createMuiTheme({
   palette: {
     primary: {
@@ -21,4 +23,9 @@ export default createMuiTheme({
     contrastThreshold: 3,
     tonalOffset: 0.2,
   },
+  waitingList: {
+    controlColumnWidth: 144,
+    controlColumnHeight: 53.5,
+  },
+  dateFormat,
 });
