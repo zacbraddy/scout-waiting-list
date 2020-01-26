@@ -69,7 +69,6 @@ export default function AdminWaitingList() {
   }
 
   const onDragEnd = async ({ source, destination, draggableId }) => {
-    console.log({ source, destination, draggableId });
     if (source.index === destination.index) return;
 
     await shuffleListAfterDrag(

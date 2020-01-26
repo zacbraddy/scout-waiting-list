@@ -5,13 +5,6 @@ export default async (firestoreSet, data, source, destination, draggableId) => {
     map(scout => {
       let shuffleDirection = destination > source ? 1 : -1;
 
-      console.log({
-        scout,
-        source,
-        destination,
-        draggableId,
-        shuffleDirection,
-      });
       const shiftScoutRank = newRank =>
         compose(
           assoc('rank', newRank),
