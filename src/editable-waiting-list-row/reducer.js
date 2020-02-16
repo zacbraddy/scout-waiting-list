@@ -7,7 +7,15 @@ import {
   SET_EDITING_ROW_ACTION_TARGET_SECTION,
   SET_EDITING_ROW_ACTION_POINTS,
   SET_EDITING_ROW_ACTION_DATE_JOINED_WAITING_LIST,
+  SET_EDITING_ROW_ACTION_SCOUT_MANUAL_ID,
 } from './action-names';
+
+const setEditingRowScoutManualIdAction = (state, { newValue }) => {
+  return {
+    ...state,
+    scoutManualId: newValue,
+  };
+};
 
 const setEditingRowNameAction = (state, { newValue }) => {
   return {
@@ -39,9 +47,10 @@ const setEditingRowDateJoinedWaitingListAction = (state, { newValue }) => {
 
 const setEditingRow = (
   state,
-  { name, points, targetSection, dateJoinedWaitingList, rank }
+  { scoutManualId, name, points, targetSection, dateJoinedWaitingList, rank }
 ) => {
   return {
+    scoutManualId,
     name,
     points,
     targetSection,
@@ -52,6 +61,7 @@ const setEditingRow = (
 
 export default function reducer(
   state = {
+    scoutManualId: '',
     name: '',
     targetSection: '',
     points: 0,
@@ -63,6 +73,8 @@ export default function reducer(
   switch (action.type) {
     case SET_EDITING_ROW:
       return setEditingRow(state, action);
+    case SET_EDITING_ROW_ACTION_SCOUT_MANUAL_ID:
+      return setEditingRowScoutManualIdAction(state, action);
     case SET_EDITING_ROW_ACTION_NAME:
       return setEditingRowNameAction(state, action);
     case SET_EDITING_ROW_ACTION_TARGET_SECTION:

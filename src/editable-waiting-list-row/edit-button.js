@@ -11,7 +11,15 @@ import { setIsEditingActionCreator } from '../admin-waiting-list/action-creators
 import { setEditingRow } from './action-creators';
 
 export default ({
-  row: { id, name, points, targetSection, dateJoinedWaitingList, rank },
+  row: {
+    id,
+    scoutManualId,
+    name,
+    points,
+    targetSection,
+    dateJoinedWaitingList,
+    rank,
+  },
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -19,6 +27,7 @@ export default ({
   const startEditing = () => {
     setIsEditingActionCreator(dispatch)(id);
     setEditingRow(dispatch)({
+      scoutManualId,
       name,
       points,
       targetSection,

@@ -5,6 +5,14 @@ import * as actions from './action-creators';
 describe('Editing row reducer', () => {
   const fakeDispatch = state => action => reducer(state, action);
 
+  test('that it sets the scout manual id of the editingRow correctly', () => {
+    const result = actions.setEditingRowScoutManualIdActionCreator(
+      fakeDispatch({ scoutManualId: `I'm Joker` })
+    )(`I'm Batman`);
+
+    expect(result.scoutManualId).toBe(`I'm Batman`);
+  });
+
   test('that it sets the name of the editingRow correctly', () => {
     const result = actions.setEditingRowNameActionCreator(
       fakeDispatch({ name: `I'm Joker` })

@@ -47,7 +47,7 @@ export default function WaitingList() {
             {scouts.map((row, index) => (
               <ScoutRow key={row.id}>
                 <TableCell component="th" scope="row">
-                  {row.id}
+                  {row.scoutManualId}
                 </TableCell>
                 <TableCell>{row.targetSection}</TableCell>
                 <TableCell>{row.points}</TableCell>

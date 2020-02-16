@@ -34,7 +34,17 @@ export default ({ row }) => {
         </div>
       </TableCell>
       <TableCell component="th" scope="row">
-        {row.id}
+        <TextField
+          id="newScoutManualId"
+          label="scoutManualId"
+          className={classes.textField}
+          value={editingRow.scoutManualId}
+          onChange={ev =>
+            actions.setEditingRowScoutManualIdActionCreator(dispatch)(
+              ev.target.value
+            )
+          }
+        />
       </TableCell>
       <TableCell>
         <TextField

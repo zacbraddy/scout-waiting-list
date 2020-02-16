@@ -1,7 +1,6 @@
 {
   "name": "scout-waiting-list",
   "version": "0.2.0",
-  "private": true,
   "dependencies": {
     "@date-io/moment": "^1.3.13",
     "@material-ui/core": "^4.9.0",
@@ -33,6 +32,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "license": "MIT",
   "browserslist": {
     "production": [
       ">0.2%",

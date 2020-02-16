@@ -26,7 +26,7 @@ export default ({ row, index, isEditing }) => {
         )}
       </TableCell>
       <TableCell component="th" scope="row">
-        {row.id}
+        {row.scoutManualId}
       </TableCell>
       <TableCell>{row.name}</TableCell>
       <TableCell>{row.targetSection}</TableCell>
